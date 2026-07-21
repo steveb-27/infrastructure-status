@@ -38,6 +38,7 @@ def main():
     print("Collecting...")
 
     for collector in collectors_loaded:
+        print(f"Running collector: {collector.name}")
         collector.collect(context)
 
     print()
@@ -45,6 +46,7 @@ def main():
     print("Validating...")
 
     for validator in validators_loaded:
+        print(f"Running validator: {validator.name}")
         validator.validate(context)
 
 
