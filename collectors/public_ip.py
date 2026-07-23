@@ -11,8 +11,6 @@ class PublicIpCollector(Collector):
         self._url = "https://api.ipify.org?format=json"
 
     def collect(self, context):
-        print(f"Running collector: {self.name}")
-
         context.public_ip = self._get_public_ip()
 
         print(f"Public IP: {context.public_ip}")
@@ -27,4 +25,4 @@ class PublicIpCollector(Collector):
 
         data = response.json()
 
-        return data["ip"]
+        return data.get('ip',False)

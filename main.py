@@ -49,6 +49,12 @@ def main():
         print(f"Running validator: {validator.name}")
         validator.validate(context)
 
+    print(f"{'Validator':<15} {'Setting':<50} {'Value':<100} {'Result':>6}")
+    for result in context.results:
+        output = f"{result[0][:15]:<15} {result[1][:50]:<50} {result[2][:100]:<100} {result[3]:>6}"
+        if result[3] == 'Fail':
+            output = f"\033[41m{output}\033[0m"
+        print(output)
 
 if __name__ == "__main__":
     main()

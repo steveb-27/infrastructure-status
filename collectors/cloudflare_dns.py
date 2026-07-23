@@ -28,8 +28,6 @@ class CloudflareDnsCollector(Collector):
         }
 
     def collect(self, context):
-        print(f"Running collector: {self.name}")
-
         zones = self._get_zones()
 
         print(f"Retrieved {len(zones)} zones")
