@@ -11,6 +11,12 @@ class Context:
 
         self.results = []
 
-    def add_result(self, validator, config, value, outcome):
+    def add_result(self, validator, config, value_exp, value_fnd, passes):
         """Helper to append a structured tuple to the log."""
-        self.results.append((validator, config, value, outcome))
+        self.results.append({
+            'validator':        validator,
+            'config':           config,
+            'value_exp':        value_exp,
+            'value_fnd':        value_fnd,
+            'passes':           passes,
+        })

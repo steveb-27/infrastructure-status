@@ -11,7 +11,6 @@ from validator import Validator
 def main():
 
     print("Infrastructure Audit")
-    print()
 
     context = Context()
 
@@ -23,7 +22,6 @@ def main():
     )
 
     print(f"Loaded {len(collectors_loaded)} collector(s).")
-
     print("Loading validators...")
 
     validators_loaded = load(
@@ -32,9 +30,6 @@ def main():
     )
 
     print(f"Loaded {len(validators_loaded)} validator(s).")
-
-    print()
-
     print("Collecting...")
 
     for collector in collectors_loaded:
@@ -49,10 +44,18 @@ def main():
         print(f"Running validator: {validator.name}")
         validator.validate(context)
 
-    print(f"{'Validator':<15} {'Setting':<50} {'Value':<100} {'Result':>6}")
+    # Define Column Widths
+    testCol     = 25
+    settingCol  = 35
+    valueCol    = 75
+    expectedCol = 75
+    resultCol   = 6
+
+    print(f"{'Validator'.ljust(testCol)} {'Setting'.ljust(settingCol)} {'Value'.ljust(valueCol)} {'Expected Value'.ljust(expectedCol)} {'Result'.rjust(resultCol)}")
     for result in context.results:
-        output = f"{result[0][:15]:<15} {result[1][:50]:<50} {result[2][:100]:<100} {result[3]:>6}"
-        if result[3] == 'Fail':
+        outcome = 'Pass' if result['passes'] else 'Fail'
+        output = f"{str(result['validator'])[:testCol].ljust(testCol)} {str(result['config'])[:settingCol].ljust(settingCol)} {str(result['value_fnd'])[:valueCol].ljust(valueCol)} {str(result['value_exp'])[:expectedCol].ljust(expectedCol)} {outcome.rjust(resultCol)}"
+        if not result['passes']:
             output = f"\033[41m{output}\033[0m"
         print(output)
 
