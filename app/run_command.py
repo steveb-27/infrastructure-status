@@ -10,6 +10,14 @@ class RunCommand:
         else:
             return self._run_remote_command(command)
 
+    def sudo_command(self, command, user='root'):
+        """Update command to change user. Note: SSH user must be in sudoers list"""
+        if user == 'root':
+            sudo_command = f"echo '{self._password}' | sudo -S -p '' {command}"
+        else:
+            sudo_command = f"echo '{self._password}' | sudo -u {user} -S -p '' {command}"
+        return self.run_command(sudo_command)
+
     def _run_local_command(self, command):
         """Run command locally"""
         result = subprocess.run(

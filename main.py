@@ -45,8 +45,8 @@ def main():
     # Define Column Widths
     testCol     = 25
     settingCol  = 35
-    valueCol    = 75
-    expectedCol = 75
+    valueCol    = 70
+    expectedCol = 70
     resultCol   = 6
 
     print(f"{'Validator'.ljust(testCol)} {'Setting'.ljust(settingCol)} {'Value'.ljust(valueCol)} {'Expected Value'.ljust(expectedCol)} {'Result'.rjust(resultCol)}")

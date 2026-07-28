@@ -28,8 +28,8 @@ class Certbot(RunCommand,Collector):
             raise RuntimeError(self._server_config + "_PASSWORD is not configured.")
 
     def collect(self, context):
-        command = f"echo '{self._password}' | sudo -S -p '' certbot certificates"
-        output = self.run_command(command)
+        command = f"certbot certificates"
+        output = self.sudo_command(command)
 
         self._parse(output, context)
 

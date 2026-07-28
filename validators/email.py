@@ -29,3 +29,6 @@ class EmailValidator(Validator):
         )
 
         # Check if certificate is self-signed
+        # sudo openssl x509 -in /etc/postfix/ssl/fullchain.pem -noout -subject -issuer | awk -F'= ' '{print $NF}' | uniq -u | grep -q . && echo "REAL CERT" || echo "GENERIC/SELF-SIGNED"
+        # Check if certificate is latest version
+        # sudo openssl x509 -in /etc/postfix/ssl/fullchain.pem -noout -serial

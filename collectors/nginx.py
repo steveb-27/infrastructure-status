@@ -31,8 +31,8 @@ class NginxCollector(RunCommand,Collector):
             raise RuntimeError(self._server_config + "_PASSWORD is not configured.")
 
     def collect(self, context):
-        command = f"echo '{self._password}' | sudo -S -p '' nginx -T"
-        output = self.run_command(command)
+        command = f"nginx -T"
+        output = self.sudo_command(command)
 
         context.nginx_sites = self._parse(output)
 
