@@ -1,9 +1,7 @@
 import os
-
 import requests
 from dotenv import load_dotenv
-
-from collector import Collector
+from app.collector import Collector
 
 
 class CloudflareDnsCollector(Collector):

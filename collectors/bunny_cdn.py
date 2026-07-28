@@ -1,9 +1,8 @@
 import os
-
 import requests
 from dotenv import load_dotenv
 from urllib.parse import urlparse
-from collector import Collector
+from app.collector import Collector
 
 
 class BunnyCdnCollector(Collector):

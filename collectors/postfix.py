@@ -1,9 +1,12 @@
 import os
+from pprint import pprint
+
 from dotenv import load_dotenv
-from collector import Collector
+from app.collector import Collector
+from app.run_command import RunCommand
 
 
-class PostfixCollector(Collector):
+class PostfixCollector(RunCommand,Collector):
 
     name = "Postfix"
 
@@ -31,7 +34,7 @@ class PostfixCollector(Collector):
 
         context.smtp_hostname = output_parsed.get('myhostname','')
         context.postfix = output_parsed
-
+        pprint(output_parsed)
         print(f"Retrieved {len(context.postfix)} Postfix settings")
 
     def remediate(self, context):
@@ -53,6 +56,7 @@ class PostfixCollector(Collector):
 
         '''
         # Test for using generic keys: /etc/ssl/certs/iRedMail.crt and /etc/ssl/private/iRedMail.key
+        # sudo openssl x509 -in /etc/ssl/certs/iRedMail.crt -noout -subject -issuer
         # On web server: sudo certbot certificates --domain sfu.silverfoxunlimited.com
         Look for:
         Found the following matching certs:

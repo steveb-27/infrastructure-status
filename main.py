@@ -1,11 +1,11 @@
-from context import Context
-from loader import load
+from app.context import Context
+from app.loader import load
 
 import collectors
 import validators
 
-from collector import Collector
-from validator import Validator
+from app.collector import Collector
+from app.validator import Validator
 
 
 def main():

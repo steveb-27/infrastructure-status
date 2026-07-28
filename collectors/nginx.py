@@ -1,10 +1,10 @@
 import os, re
 from dotenv import load_dotenv
+from app.collector import Collector
+from app.run_command import RunCommand
 
-from collector import Collector
 
-
-class NginxCollector(Collector):
+class NginxCollector(RunCommand,Collector):
 
     name = "Nginx"
 
@@ -16,23 +16,19 @@ class NginxCollector(Collector):
         load_dotenv()
         self._server_config = os.getenv("NGINX_SERVER", "WEB_SERVER")
 
-        self._mode = os.getenv(self._server_config + "_HOST", "local").lower()
         self._password = os.getenv(self._server_config + "_PASSWORD")
+        self._host = os.getenv(self._server_config + "_HOST")
+        self._port = int(os.getenv(self._server_config + "_PORT", "22"))
+        self._user = os.getenv(self._server_config + "_USER")
 
-        if self._mode != "local":
-            self._mode = 'ssh'
-            self._host = os.getenv(self._server_config + "_HOST")
-            self._port = int(os.getenv(self._server_config + "_PORT", "22"))
-            self._user = os.getenv(self._server_config + "_USER")
+        if not self._host:
+            raise RuntimeError(self._server_config + "_HOST is not configured.")
 
-            if not self._host:
-                raise RuntimeError(self._server_config + "_HOST is not configured.")
+        if not self._user:
+            raise RuntimeError(self._server_config + "_USER is not configured.")
 
-            if not self._user:
-                raise RuntimeError(self._server_config + "_USER is not configured.")
-
-            if not self._password:
-                raise RuntimeError(self._server_config + "_PASSWORD is not configured.")
+        if not self._password:
+            raise RuntimeError(self._server_config + "_PASSWORD is not configured.")
 
     def collect(self, context):
         command = f"echo '{self._password}' | sudo -S -p '' nginx -T"

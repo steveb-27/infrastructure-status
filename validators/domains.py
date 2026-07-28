@@ -1,5 +1,4 @@
-import json
-from validator import Validator
+from app.validator import Validator
 
 
 class DomainsValidator(Validator):

@@ -1,5 +1,5 @@
 import requests
-from collector import Collector
+from app.collector import Collector
 
 
 class PublicIpCollector(Collector):

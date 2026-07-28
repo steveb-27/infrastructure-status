@@ -1,18 +1,8 @@
-from abc import ABC, abstractmethod
 import subprocess
 import paramiko
 
 
-class Collector(ABC):
-
-    @abstractmethod
-    def collect(self, context):
-        """Method to fetch configuration data"""
-
-    @abstractmethod
-    def remediate(self, context):
-        """Method to fix issues found by validator"""
-
+class RunCommand:
     def run_command(self, command):
         """Connect to a terminal, local or ssh"""
         if self._host.lower() == 'local':

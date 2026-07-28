@@ -2,6 +2,7 @@ class Context:
 
     def __init__(self):
         """Initialize properties that can be written to"""
+        self.certificates = []
         self.domains = []
         self.public_ip = None
         self.smtp_hostname = None

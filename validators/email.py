@@ -1,4 +1,4 @@
-from validator import Validator
+from app.validator import Validator
 
 
 class EmailValidator(Validator):
@@ -27,3 +27,5 @@ class EmailValidator(Validator):
             value_fnd=value_fnd,
             passes=value_exp == value_fnd
         )
+
+        # Check if certificate is self-signed
