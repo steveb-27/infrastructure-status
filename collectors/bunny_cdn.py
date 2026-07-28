@@ -48,6 +48,9 @@ class BunnyCdnCollector(Collector):
 
         context.bunnycdn_pull_zone = cdn
 
+    def remediate(self, context):
+        pass
+
     def _get_zones(self):
         response = requests.get(
             f"{self._api}/pullzone",

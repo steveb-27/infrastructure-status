@@ -1,5 +1,4 @@
 import requests
-
 from collector import Collector
 
 
@@ -14,6 +13,9 @@ class PublicIpCollector(Collector):
         context.public_ip = self._get_public_ip()
 
         print(f"Public IP: {context.public_ip}")
+
+    def remediate(self, context):
+        pass
 
     def _get_public_ip(self):
         response = requests.get(

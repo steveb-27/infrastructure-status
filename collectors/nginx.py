@@ -1,7 +1,4 @@
 import os, re
-import subprocess
-
-import paramiko
 from dotenv import load_dotenv
 
 from collector import Collector
@@ -17,97 +14,38 @@ class NginxCollector(Collector):
 
     def __init__(self):
         load_dotenv()
+        self._server_config = os.getenv("NGINX_SERVER", "WEB_SERVER")
 
-        self._mode = os.getenv("NGINX_MODE", "local").lower()
-        self._password = os.getenv("WEB_SERVER_PASSWORD")
+        self._mode = os.getenv(self._server_config + "_HOST", "local").lower()
+        self._password = os.getenv(self._server_config + "_PASSWORD")
 
-        if self._mode == "ssh":
-            self._host = os.getenv("WEB_SERVER_HOST")
-            self._port = int(os.getenv("WEB_SERVER_PORT", "22"))
-            self._user = os.getenv("WEB_SERVER_USER")
+        if self._mode != "local":
+            self._mode = 'ssh'
+            self._host = os.getenv(self._server_config + "_HOST")
+            self._port = int(os.getenv(self._server_config + "_PORT", "22"))
+            self._user = os.getenv(self._server_config + "_USER")
 
             if not self._host:
-                raise RuntimeError("WEB_SERVER_HOST is not configured.")
+                raise RuntimeError(self._server_config + "_HOST is not configured.")
 
             if not self._user:
-                raise RuntimeError("WEB_SERVER_USER is not configured.")
+                raise RuntimeError(self._server_config + "_USER is not configured.")
 
             if not self._password:
-                raise RuntimeError("WEB_SERVER_PASSWORD is not configured.")
+                raise RuntimeError(self._server_config + "_PASSWORD is not configured.")
 
     def collect(self, context):
-        configuration = self._get_configuration()
+        command = f"echo '{self._password}' | sudo -S -p '' nginx -T"
+        output = self.run_command(command)
 
-        context.nginx_sites = self._parse(configuration)
+        context.nginx_sites = self._parse(output)
 
         print(
             f"Retrieved {len(context.nginx_sites)} nginx server block(s)"
         )
 
-    def _get_configuration(self):
-        command = f"echo '{self._password}' | sudo -S -p '' nginx -T"
-
-        if self._mode == "local":
-            return self._run_local_command(command)
-
-        if self._mode == "ssh":
-            client = self._connect()
-
-            try:
-                return self._run_remote_command(
-                    client,
-                    command
-                )
-
-            finally:
-                client.close()
-
-        raise RuntimeError(
-            f"Unsupported NGINX_MODE: {self._mode}"
-        )
-
-    def _run_local_command(self, command):
-        result = subprocess.run(
-            command,
-            capture_output=True,
-            text=True
-        )
-
-        if result.returncode != 0:
-            raise RuntimeError(result.stderr.strip())
-
-        return result.stdout + result.stderr
-
-    def _connect(self):
-        client = paramiko.SSHClient()
-
-        client.load_system_host_keys()
-        client.set_missing_host_key_policy(
-            paramiko.AutoAddPolicy()
-        )
-
-        client.connect(
-            hostname=self._host,
-            port=self._port,
-            username=self._user,
-            password=self._password,
-            timeout=30,
-        )
-
-        return client
-
-    def _run_remote_command(self, client, command):
-        stdin, stdout, stderr = client.exec_command(command)
-
-        output = stdout.read().decode()
-        error = stderr.read().decode()
-
-        exit_status = stdout.channel.recv_exit_status()
-
-        if exit_status != 0:
-            raise RuntimeError(error.strip())
-
-        return output + error
+    def remediate(self, context):
+        pass
 
     def _parse(self, configuration):
         servers = []

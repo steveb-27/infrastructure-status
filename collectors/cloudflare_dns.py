@@ -39,6 +39,9 @@ class CloudflareDnsCollector(Collector):
 
         context.domains = zones
 
+    def remediate(self, context):
+        pass
+
     def _get_zones(self):
         response = requests.get(
             f"{self._api}/zones",
