@@ -84,6 +84,11 @@ class Certbot(RunCommand,Collector):
                 errors = True
                 certs = False
         context.certificates = certificates
+
+        #
+        # Self Contained Tests
+        #
+
         # The command volunteers configuration errors, pass these directly as results without validation
         for error in given_errors:
             context.add_result(

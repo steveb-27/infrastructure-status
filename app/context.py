@@ -7,6 +7,11 @@ class Context:
         self.public_ip = None
         self.smtp_hostname = None
         self.postfix = None
+        self.postfix_smtpd_auth = None
+        self.postfix_smtpd_serial = None
+        self.postfix_smtp_auth = None
+        self.postfix_smtp_serial = None
+        self.postfix_valid_certs = []
         self.nginx_sites = []
         self.bunnycdn_pull_zone = []
 

@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 
 from dotenv import load_dotenv
 from app.collector import Collector
@@ -34,8 +33,25 @@ class PostfixCollector(RunCommand,Collector):
 
         context.smtp_hostname = output_parsed.get('myhostname','')
         context.postfix = output_parsed
-        pprint(output_parsed)
         print(f"Retrieved {len(context.postfix)} Postfix settings")
+
+        #
+        # Certificate Specifics
+        #
+
+        # Record self-signed vs authority status
+        _sudo_command = f"openssl x509 -in {output_parsed['smtp_tls_cert_file']} -noout -subject -issuer | awk -F'= ' '{{print $NF}}' | uniq -u | grep -q . && echo 'REAL CERT' || echo 'GENERIC/SELF-SIGNED'"
+        context.postfix_smtp_auth = self.sudo_command(_sudo_command)
+        # Record serial number for smtp tls certificate
+        _sudo_command = f"openssl x509 -in {output_parsed['smtp_tls_cert_file']} -noout -serial"
+        context.postfix_smtp_serial = self.sudo_command(_sudo_command).split('=')[1].lower().lstrip("0")
+
+        # Record self-signed vs authority status
+        _sudo_command = f"openssl x509 -in {output_parsed['smtpd_tls_cert_file']} -noout -subject -issuer | awk -F'= ' '{{print $NF}}' | uniq -u | grep -q . && echo 'REAL CERT' || echo 'GENERIC/SELF-SIGNED'"
+        context.postfix_smtpd_auth = self.sudo_command(_sudo_command)
+        # Record serial number for smtp tls certificate
+        _sudo_command = f"openssl x509 -in {output_parsed['smtpd_tls_cert_file']} -noout -serial"
+        context.postfix_smtpd_serial = self.sudo_command(_sudo_command).split('=')[1].lower().lstrip("0")
 
     def remediate(self, context):
         # Console comands for fixes

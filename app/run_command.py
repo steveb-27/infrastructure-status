@@ -6,9 +6,9 @@ class RunCommand:
     def run_command(self, command):
         """Connect to a terminal, local or ssh"""
         if self._host.lower() == 'local':
-            return self._run_local_command(command)
+            return self._run_local_command(command).strip()
         else:
-            return self._run_remote_command(command)
+            return self._run_remote_command(command).strip()
 
     def sudo_command(self, command, user='root'):
         """Update command to change user. Note: SSH user must be in sudoers list"""
