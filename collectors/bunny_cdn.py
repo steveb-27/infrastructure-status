@@ -48,7 +48,10 @@ class BunnyCdnCollector(Collector):
         context.bunnycdn_pull_zone = cdn
 
     def remediate(self, context):
-        pass
+        _cdn_errors = [
+            found_error
+            for found_error in context.results if 'CDN' in found_error['validator']
+        ]
 
     def _get_zones(self):
         response = requests.get(

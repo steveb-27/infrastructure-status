@@ -38,7 +38,15 @@ class Certbot(RunCommand,Collector):
         )
 
     def remediate(self, context):
-        pass
+        _certbot_errors = [
+            found_error
+            for found_error in context.results if found_error['validator'].split('|', 1)[0] == 'CERTBOT'
+        ]
+
+        _ssl_errors = [
+            found_error
+            for found_error in context.results if found_error['validator'].split('|', 1)[0] == 'SSL'
+        ]
 
     def _parse(self,output, context):
         """Parse output from 'certbot certificates' command"""

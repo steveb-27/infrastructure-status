@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 class EmailValidator(RunCommand,Validator):
 
-    name = "SMTP Server"
+    name = "SMTP"
 
     def __init__(self):
         load_dotenv()
@@ -54,7 +54,7 @@ class EmailValidator(RunCommand,Validator):
         value_exp = 'REAL CERT'
         value_fnd = context.postfix_smtp_auth
         context.add_result(
-            validator=self.name + '|SMTP-CERT|AUTHORITY',
+            validator=self.name + '|CERT|AUTHORITY',
             config="smtp_tls_cert_file",
             value_exp=value_exp,
             value_fnd=value_fnd,
@@ -65,7 +65,7 @@ class EmailValidator(RunCommand,Validator):
         value_exp = 'REAL CERT'
         value_fnd = context.postfix_smtpd_auth
         context.add_result(
-            validator=self.name + '|SMTPD-CERT|AUTHORITY',
+            validator=self.name + '|CERT|AUTHORITY',
             config="smtpd_tls_cert_file",
             value_exp=value_exp,
             value_fnd=value_fnd,
@@ -83,7 +83,7 @@ class EmailValidator(RunCommand,Validator):
         value_exp = [str(cert['Serial Number']) for cert in context.postfix_valid_certs]
         value_fnd = context.postfix_smtp_serial
         context.add_result(
-            validator=self.name + '|SMTP-CERT|SERIAL-MATCH',
+            validator=self.name + '|CERT|SERIAL-MATCH',
             config="smtp_tls_cert_file",
             value_exp=value_exp,
             value_fnd=value_fnd,
@@ -94,7 +94,7 @@ class EmailValidator(RunCommand,Validator):
         value_exp = [cert['Serial Number'] for cert in context.postfix_valid_certs]
         value_fnd = context.postfix_smtpd_serial
         context.add_result(
-            validator=self.name + '|SMTPD-CERT|SERIAL-MATCH',
+            validator=self.name + '|CERT|SERIAL-MATCH',
             config="smtpd_tls_cert_file",
             value_exp=value_exp,
             value_fnd=value_fnd,

@@ -41,7 +41,10 @@ class NginxCollector(RunCommand,Collector):
         )
 
     def remediate(self, context):
-        pass
+        _nginx_errors = [
+            found_error
+            for found_error in context.results if 'NGINX' in found_error['validator']
+        ]
 
     def _parse(self, configuration):
         servers = []

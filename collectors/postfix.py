@@ -1,4 +1,5 @@
 import os
+from calendar import error
 
 from dotenv import load_dotenv
 from app.collector import Collector
@@ -54,6 +55,11 @@ class PostfixCollector(RunCommand,Collector):
         context.postfix_smtpd_serial = self.sudo_command(_sudo_command).split('=')[1].lower().lstrip("0")
 
     def remediate(self, context):
+        """Fix postfix related issues"""
+        _smtp_errors = [
+            found_error
+            for found_error in context.results if found_error['validator'].split('|',1)[0] == 'SMTP'
+        ]
         # Console comands for fixes
         '''
         sudo postconf -X sender_dependent_relayhost_maps

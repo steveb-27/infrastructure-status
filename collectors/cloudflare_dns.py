@@ -38,7 +38,13 @@ class CloudflareDnsCollector(Collector):
         context.domains = zones
 
     def remediate(self, context):
-        pass
+        _dns_errors = [
+            found_error
+            for found_error in context.results
+            if found_error['validator'].split('|', 1)[0] == 'DNS'
+               and not 'CDN' in found_error['validator']
+               and not 'NGINX' in found_error['validator']
+        ]
 
     def _get_zones(self):
         response = requests.get(
